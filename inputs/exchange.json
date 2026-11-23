@@ -1,0 +1,257 @@
+{
+  "initial": {
+    "/property/handover": {
+      "status": 200,
+      "kind": "json",
+      "body": {
+        "buildings": [
+          {
+            "id": "D2",
+            "cells": [
+              "G-21",
+              "G-22"
+            ],
+            "page": "/property/D2/a"
+          },
+          {
+            "id": "D3",
+            "cells": [
+              "G-31"
+            ],
+            "page": "/property/D3/a"
+          }
+        ]
+      }
+    },
+    "/property/D2/a": {
+      "status": 200,
+      "kind": "html",
+      "body": "<main data-snapshot=\"L6\"><table><tr><th>门牌</th><th>交付号</th></tr><tr><td>2-301</td><td>G-21</td></tr></table><a rel=\"next\" href=\"/property/D2/b\">下一页</a></main>"
+    },
+    "/property/D2/b": {
+      "status": 200,
+      "kind": "html",
+      "body": "<main data-snapshot=\"L6\"><table><tr><th>门牌</th><th>交付号</th></tr><tr><td>2-302</td><td>G-22</td></tr></table><a href=\"/property/D2/fees.csv\">本期收费</a></main>"
+    },
+    "/property/D3/a": {
+      "status": 200,
+      "kind": "html",
+      "body": "<main data-snapshot=\"L7\"><table><tr><td>3-301</td><td>G-31</td></tr></table></main>"
+    },
+    "/property/D2/fees.csv": {
+      "status": 200,
+      "kind": "csv",
+      "body": "snapshot,door,escrow,available_fen\nL6,2-301,A01,700000\nL6,2-302,A02,500000\n"
+    },
+    "/registry/units": {
+      "status": 200,
+      "kind": "json",
+      "body": {
+        "records": [
+          {
+            "title": "P21",
+            "cell": "G-21",
+            "owner": "O21",
+            "interest": 60,
+            "effective": "2026-01-01",
+            "fund": "A01"
+          },
+          {
+            "title": "P22",
+            "cell": "G-22",
+            "owner": "O22",
+            "interest": 40,
+            "effective": "2026-01-01",
+            "fund": "A02"
+          }
+        ]
+      }
+    },
+    "/repairs/applications": {
+      "status": 200,
+      "kind": "json",
+      "body": {
+        "records": [
+          {
+            "id": "FIX-1",
+            "signed": "2026-11-28",
+            "scope": [
+              "G-21",
+              "G-22"
+            ],
+            "min_yes": 60,
+            "votes": [
+              [
+                "O21",
+                "yes"
+              ],
+              [
+                "O22",
+                "no"
+              ]
+            ],
+            "funds": [
+              [
+                "A01",
+                300000
+              ],
+              [
+                "A90",
+                100000
+              ]
+            ]
+          },
+          {
+            "id": "FIX-2",
+            "signed": "2026-11-29",
+            "scope": [
+              "G-21"
+            ],
+            "min_yes": 60,
+            "votes": [
+              [
+                "O21",
+                "yes"
+              ]
+            ],
+            "funds": [
+              [
+                "A01",
+                350000
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "/escrow/effective": {
+      "status": 200,
+      "kind": "json",
+      "body": {
+        "balances": {
+          "A01": 700000,
+          "A02": 500000,
+          "A90": 200000
+        },
+        "reservations": [
+          {
+            "app": "FIX-0",
+            "account": "A01",
+            "balance": 230000,
+            "state": "frozen",
+            "receipt": "F-10"
+          }
+        ]
+      }
+    }
+  },
+  "changes": [
+    {
+      "label": "财务取得银行冻结回执",
+      "routes": {
+        "/escrow/effective": {
+          "status": 200,
+          "kind": "json",
+          "body": {
+            "balances": {
+              "A01": 700000,
+              "A02": 500000,
+              "A90": 200000
+            },
+            "reservations": [
+              {
+                "app": "FIX-0",
+                "account": "A01",
+                "balance": 230000,
+                "state": "frozen",
+                "receipt": "F-10"
+              },
+              {
+                "app": "FIX-1",
+                "account": "A01",
+                "balance": 300000,
+                "state": "frozen",
+                "receipt": "F-11"
+              },
+              {
+                "app": "FIX-1",
+                "account": "A90",
+                "balance": 100000,
+                "state": "paid",
+                "receipt": "PAY-41"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "label": "补登拆分关系及适用日期",
+      "routes": {
+        "/registry/units": {
+          "status": 200,
+          "kind": "json",
+          "body": {
+            "records": [
+              {
+                "title": "P21",
+                "cell": "G-21",
+                "owner": "O21",
+                "interest": 60,
+                "effective": "2026-01-01",
+                "until": "2026-11-27",
+                "fund": "A01"
+              },
+              {
+                "title": "P21-1",
+                "cell": "G-21",
+                "owner": "O21",
+                "interest": 35,
+                "effective": "2026-11-27",
+                "supersedes": "P21",
+                "fund": "A01"
+              },
+              {
+                "title": "P21-2",
+                "cell": "G-21",
+                "owner": "O28",
+                "interest": 25,
+                "effective": "2026-11-27",
+                "supersedes": "P21",
+                "fund": "A01"
+              },
+              {
+                "title": "P22",
+                "cell": "G-22",
+                "owner": "O22",
+                "interest": 40,
+                "effective": "2026-01-01",
+                "fund": "A02"
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "forms": {
+    "/escrow/portal": {
+      "operations": [
+        "freeze",
+        "release",
+        "pay",
+        "refer"
+      ],
+      "identifier": "FZ",
+      "outcomes": {
+        "2": {
+          "release": {
+            "A01": "pending",
+            "@response": "lost"
+          }
+        }
+      },
+      "browser": true
+    }
+  }
+}
